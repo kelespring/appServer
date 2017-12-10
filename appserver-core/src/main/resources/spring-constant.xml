@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd">
+    <description>系统常量配置信息</description>
+    <util:map id="term">
+    	<entry key="01" value="春季班"></entry>
+    	<entry key="02" value="暑期班"></entry>
+    	<entry key="03" value="秋季班"></entry>
+    	<entry key="04" value="寒假班"></entry>
+    	<entry key="05" value="活动类"></entry>
+    	<entry key="06" value="短期班"></entry>
+    </util:map>
+    <util:map id="grade">
+    	<entry key="0" value="学前"></entry>
+    	<entry key="1" value="一年级"></entry>
+    	<entry key="2" value="二年级"></entry>
+    	<entry key="3" value="三年级"></entry>
+    	<entry key="4" value="四年级"></entry>
+    	<entry key="5" value="五年级"></entry>
+    	<entry key="6" value="六年级"></entry>
+    	<entry key="7" value="初中一年级"></entry>
+    	<entry key="8" value="初中二年级"></entry>
+    	<entry key="9" value="初中三年级"></entry>
+    	<entry key="10" value="高中一年级"></entry>
+    	<entry key="11" value="高中二年级"></entry>
+    	<entry key="12" value="高中三年级"></entry>
+    </util:map>
+    <util:map id="subject">
+    	<entry key="101" value="物理"></entry>
+    	<entry key="102" value="化学"></entry>
+    	<entry key="103" value="数学"></entry>
+    	<entry key="104" value="生物"></entry>
+    	<entry key="201" value="语文"></entry>
+    	<entry key="202" value="英语"></entry>
+    	<entry key="203" value="科学"></entry>
+    	<entry key="204" value="政治"></entry>
+    	<entry key="205" value="综合"></entry>
+    	<entry key="801" value="数学联赛"></entry>
+    	<entry key="901" value="直播数学"></entry>
+    	<entry key="902" value="直播物理"></entry>
+    	<entry key="903" value="直播化学"></entry>
+    </util:map>
+    <util:map id="class">
+    	<entry key="101" value="提高班(双师课堂)"></entry>
+		<entry key="102" value="课改提高班(双师课堂)"></entry>
+		<entry key="103" value="提高班"></entry>
+		<entry key="201" value="尖子班(双师课堂)"></entry>
+		<entry key="202" value="课改尖子班(双师课堂)"></entry>
+		<entry key="203" value="尖子班"></entry>
+		<entry key="204" value="尖子班(双师课堂)(必修1+4)"></entry>
+		<entry key="301" value="超常班"></entry>
+		<entry key="302" value="超常班(双师课堂)"></entry>
+		<entry key="401" value="十次课学完初一"></entry>
+		<entry key="402" value="十次课学完初一(双师课堂)"></entry>
+		<entry key="403" value="十次课学完高一上(双师课堂)"></entry>
+		<entry key="412" value="第十二次补课班(双师课堂)"></entry>
+		<entry key="413" value="第十三次补课班(双师课堂)"></entry>
+		<entry key="414" value="第十四次课补课班(双师课堂)"></entry>
+		<entry key="501" value="特长班"></entry>
+		<entry key="696" value="顺义新初一衔接公开课(双师课堂)"></entry>
+		<entry key="697" value="新初一衔接公开课(双师课堂)"></entry>
+		<entry key="698" value="中考志愿填报政策巨变如何应对(双师课堂)"></entry>
+		<entry key="699" value="大兴如何领跑新初一(双师课堂)"></entry>
+		<entry key="700" value="如何在初中保持领先(双师课堂)"></entry>
+		<entry key="701" value="如何领跑新初一(双师课堂)"></entry>
+		<entry key="899" value="初升高衔接课(双师课堂)"></entry>
+		<entry key="901" value="如何顺利衔接二升三学习讲座(双师课堂)"></entry>
+		<entry key="902" value="二升三衔接第3课(双师课堂)"></entry>
+		<entry key="903" value="二升三衔接讲座(双师课堂)"></entry>
+		<entry key="904" value="高联预备班"></entry>
+		<entry key="905" value="物竞预备班"></entry>
+		<entry key="906" value="代数几何六大模块巩固强化班(双师课堂)"></entry>
+		<entry key="907" value="联赛班代几重点巩固突破班(双师课堂)"></entry>
+		<entry key="908" value="Testing直播数学"></entry>
+		<entry key="909" value="双师课堂计算满分班"></entry>
+		<entry key="910" value="双师课堂代数综合提升"></entry>
+		<entry key="911" value="电路高阶综合突破(双师课堂)"></entry>
+		<entry key="912" value="中考几何压轴题短期班(双师课堂)"></entry>
+    </util:map>
+    <util:map id="period">
+    	<entry key="0" value="0.5期"></entry>
+    	<entry key="1" value="0期"></entry>
+    	<entry key="2" value="1期"></entry>
+    	<entry key="3" value="2期"></entry>
+    	<entry key="4" value="3期"></entry>
+    	<entry key="5" value="4期"></entry>
+    	<entry key="6" value="5期"></entry>
+    	<entry key="7" value="6期"></entry>
+    	<entry key="8" value="7期"></entry>
+    	<entry key="9" value="8期"></entry>
+    	<entry key="10" value="9期"></entry>
+    	<entry key="99" value="不分期"></entry>
+    </util:map>
+    <util:map id="time">
+    	<entry key="morning" value="正常上午"></entry>
+    	<entry key="afternoon" value="正常下午"></entry>
+    	<entry key="night" value="正常晚上"></entry>
+    	<entry key="noon" value="正常中午"></entry>
+    	<entry key="1-2" value="1点-2点"></entry>
+    	<entry key="2-3" value="2点-3点"></entry>
+    	<entry key="3-4" value="3点-4点"></entry>
+    	<entry key="4-5" value="4点-5点"></entry>
+    	<entry key="5-6" value="5点-6点"></entry>
+    	<entry key="6-7" value="6点-7点"></entry>
+    	<entry key="7-8" value="7点-8点"></entry>
+    	<entry key="8-9" value="8点-9点"></entry>
+    	<entry key="9-10" value="9点-10点"></entry>
+    	<entry key="10-11" value="10点-11点"></entry>
+    	<entry key="11-12" value="11点-12点"></entry>
+    	<entry key="12-13" value="12点-13点"></entry>
+    	<entry key="13-14" value="13点-14点"></entry>
+    	<entry key="14-15" value="14点-15点"></entry>
+    	<entry key="15-16" value="15点-16点"></entry>
+    	<entry key="16-17" value="16点-17点"></entry>
+    	<entry key="17-18" value="17点-18点"></entry>
+    	<entry key="18-19" value="18点-19点"></entry>
+    	<entry key="19-20" value="19点-20点"></entry>
+    	<entry key="20-21" value="20点-21点"></entry>
+    	<entry key="21-22" value="21点-22点"></entry>
+    	<entry key="22-23" value="22点-23点"></entry>
+    	<entry key="23-24" value="23点-24点"></entry>
+    	<entry key="24-0" value="24点-0点"></entry>
+    </util:map>
+    <util:map id="year">
+    	<entry key="2016" value="2016"></entry>
+    	<entry key="2017" value="2017"></entry>
+    	<entry key="2018" value="2018"></entry>
+    	<entry key="2019" value="2019"></entry>
+    	<entry key="2020" value="2020"></entry>
+    	<entry key="2021" value="2021"></entry>
+    </util:map>
+    
+    <util:map id="month">
+    	<entry key="1" value="1"></entry>
+    	<entry key="2" value="2"></entry>
+    	<entry key="3" value="3"></entry>
+    	<entry key="4" value="4"></entry>
+    	<entry key="5" value="5"></entry>
+    	<entry key="6" value="6"></entry>
+    	<entry key="7" value="7"></entry>
+    	<entry key="8" value="8"></entry>
+    	<entry key="9" value="9"></entry>
+    	<entry key="10" value="10"></entry>
+    	<entry key="11" value="11"></entry>
+    	<entry key="12" value="12"></entry>
+    </util:map>
+    <util:map id="day">
+    	<entry key="1" value="1"></entry>
+    	<entry key="2" value="2"></entry>
+    	<entry key="3" value="3"></entry>
+    	<entry key="4" value="4"></entry>
+    	<entry key="5" value="5"></entry>
+    	<entry key="6" value="6"></entry>
+    	<entry key="7" value="7"></entry>
+    	<entry key="8" value="8"></entry>
+    	<entry key="9" value="9"></entry>
+    	<entry key="10" value="10"></entry>
+    	<entry key="11" value="11"></entry>
+    	<entry key="12" value="12"></entry>
+    	<entry key="13" value="13"></entry>
+    	<entry key="14" value="14"></entry>
+    	<entry key="15" value="15"></entry>
+    	<entry key="16" value="16"></entry>
+    	<entry key="17" value="17"></entry>
+    	<entry key="18" value="18"></entry>
+    	<entry key="19" value="19"></entry>
+    	<entry key="20" value="20"></entry>
+    	<entry key="21" value="21"></entry>
+    	<entry key="22" value="22"></entry>
+    	<entry key="23" value="23"></entry>
+    	<entry key="24" value="24"></entry>
+    	<entry key="25" value="25"></entry>
+    	<entry key="26" value="26"></entry>
+    	<entry key="27" value="27"></entry>
+    	<entry key="28" value="28"></entry>
+    	<entry key="29" value="29"></entry>
+    	<entry key="30" value="30"></entry>
+    	<entry key="31" value="31"></entry>
+    </util:map>
+    <!-- 季度（班级报表） -->
+    <util:map id="quarterMap">
+    	<entry key="1" value="春季班"/>
+    	<entry key="2" value="暑期班"/>
+    	<entry key="3" value="秋季班"/>
+    	<entry key="4" value="寒假班"/>
+    </util:map>
+    <!-- 双师对比BI -->
+    <util:map id="yearsMap">
+    	<entry key="2016" value="2016"/>
+    	<entry key="2017" value="2017"/>
+    	<entry key="2018" value="2018"/>
+    	<entry key="2019" value="2019"/>
+    	<entry key="2020" value="2020"/>
+    </util:map>
+</beans>

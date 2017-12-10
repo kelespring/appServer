@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.gh</groupId>
+		<artifactId>appserver</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<groupId>com.gh</groupId>
+	<artifactId>appserver-rest</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+	<name>appserver-rest Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<dependencies>
+		<dependency>
+			<groupId>com.xes.live</groupId>
+			<artifactId>framework-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.gh</groupId>
+			<artifactId>appserver-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>appserver-rest</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.eclipse.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>9.3.7.v20160115</version>
+				<configuration>
+					<webAppSourceDirectory>src/main/webapp</webAppSourceDirectory>
+					<scanIntervalSeconds>0</scanIntervalSeconds>
+					<webApp>
+						<contextPath>/appserver-rest</contextPath>
+					</webApp>
+					<connectors>
+						<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+							<port>8080</port>
+							<maxIdleTime>60000</maxIdleTime>
+						</connector>
+					</connectors>
+					<stopPort>9966</stopPort>
+					<stopKey>foo</stopKey>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

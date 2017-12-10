@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:repository="http://www.springframework.org/schema/data/repository"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/util
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/data/jpa
+    	http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    	http://www.springframework.org/schema/data/repository
+    	http://www.springframework.org/schema/data/repository/spring-repository.xsd
+    	http://www.springframework.org/schema/tx 
+    	http://www.springframework.org/schema/tx/spring-tx.xsd
+    	http://www.springframework.org/schema/aop 
+    	http://www.springframework.org/schema/aop/spring-aop.xsd">
+    	
+    <import resource="classpath*:/spring-framework-mybatis.xml"/>
+	<util:properties id="server" location="classpath:server.properties" />
+	
+	<bean id="masterDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="jdbcUrl" value="#{server['master.jdbc.url']}" />
+		<property name="user" value="#{server['master.jdbc.username']}" />
+		<property name="password" value="#{server['master.jdbc.password']}" />
+
+		<!-- 连接关闭时默认将所有未提交的操作回滚。Default: false -->
+		<property name="autoCommitOnClose" value="true" />
+		<!-- 当连接池用完时客户端调用getConnection()后等待获取新连接的时间,超时后将抛出 SQLException,如设为0则无限期等待。单位毫秒。Default: 	0 -->
+		<property name="checkoutTimeout" value="#{server['master.c3p0.pool.checkoutTimeout']}" />
+		<!-- 初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+		<property name="initialPoolSize" value="#{server['master.c3p0.pool.minPoolSize']}" />
+		<!-- 连接池中保留的最小连接数 -->
+		<property name="minPoolSize" value="#{server['master.c3p0.pool.minPoolSize']}" />
+		<!-- 连接池中保留的最大连接数。Default: 15 -->
+		<property name="maxPoolSize" value="#{server['master.c3p0.pool.maxPoolSize']}" />
+		<!-- 最大空闲时间,36000秒(10小时)内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+		<property name="maxIdleTime" value="#{server['master.c3p0.pool.maxIdleTime']}" />
+		<property name="maxIdleTimeExcessConnections" value="#{server['master.c3p0.pool.maxIdleTimeExcessConnections']}" />
+		<!-- 当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+		<property name="acquireIncrement" value="#{server['master.c3p0.pool.acquireIncrement']}" />
+		<!-- 定义在从数据库获取新连接失败后重复尝试的次数。Default: 30 -->
+		<property name="acquireRetryAttempts" value="#{server['master.c3p0.pool.acquireRetryAttempts']}" />
+		<!-- 两次连接中间隔时间，单位毫秒。Default: 1000 -->
+		<property name="acquireRetryDelay" value="#{server['master.c3p0.pool.acquireRetryDelay']}" />
+		
+		<!-- 定期使用连接池内的连接，使得它们不会因为闲置超时而被 MySQL 断开 修复8小时问题。  -->
+		<property name="preferredTestQuery" value="#{server['master.c3p0.pool.preferredTestQuery']}" />
+		<property name="idleConnectionTestPeriod" value="#{server['master.c3p0.pool.idleConnectionTestPeriod']}" />
+		<property name="testConnectionOnCheckout" value="#{server['master.c3p0.pool.testConnectionOnCheckout']}" />
+	</bean>
+	
+	<bean id="slaveDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="jdbcUrl" value="#{server['slave.jdbc.url']}" />
+		<property name="user" value="#{server['slave.jdbc.username']}" />
+		<property name="password" value="#{server['slave.jdbc.password']}" />
+
+		<!-- 连接关闭时默认将所有未提交的操作回滚。Default: false -->
+		<property name="autoCommitOnClose" value="true" />
+		<!-- 当连接池用完时客户端调用getConnection()后等待获取新连接的时间,超时后将抛出 SQLException,如设为0则无限期等待。单位毫秒。Default: 	0 -->
+		<property name="checkoutTimeout" value="#{server['slave.c3p0.pool.checkoutTimeout']}" />
+		<!-- 初始化时获取的连接数，取值应在minPoolSize与maxPoolSize之间。Default: 3 -->
+		<property name="initialPoolSize" value="#{server['slave.c3p0.pool.minPoolSize']}" />
+		<!-- 连接池中保留的最小连接数 -->
+		<property name="minPoolSize" value="#{server['slave.c3p0.pool.minPoolSize']}" />
+		<!-- 连接池中保留的最大连接数。Default: 15 -->
+		<property name="maxPoolSize" value="#{server['slave.c3p0.pool.maxPoolSize']}" />
+		<!-- 最大空闲时间,36000秒(10小时)内未使用则连接被丢弃。若为0则永不丢弃。Default: 0 -->
+		<property name="maxIdleTime" value="#{server['slave.c3p0.pool.maxIdleTime']}" />
+		<property name="maxIdleTimeExcessConnections" value="#{server['slave.c3p0.pool.maxIdleTimeExcessConnections']}" />
+		<!-- 当连接池中的连接耗尽的时候c3p0一次同时获取的连接数。Default: 3 -->
+		<property name="acquireIncrement" value="#{server['slave.c3p0.pool.acquireIncrement']}" />
+		<!-- 定义在从数据库获取新连接失败后重复尝试的次数。Default: 30 -->
+		<property name="acquireRetryAttempts" value="#{server['slave.c3p0.pool.acquireRetryAttempts']}" />
+		<!-- 两次连接中间隔时间，单位毫秒。Default: 1000 -->
+		<property name="acquireRetryDelay" value="#{server['slave.c3p0.pool.acquireRetryDelay']}" />
+		<!-- 定期使用连接池内的连接，使得它们不会因为闲置超时而被 MySQL 断开 修复8小时问题。  -->
+		<property name="preferredTestQuery" value="#{server['slave.c3p0.pool.preferredTestQuery']}" />
+		<property name="idleConnectionTestPeriod" value="#{server['slave.c3p0.pool.idleConnectionTestPeriod']}" />
+		<property name="testConnectionOnCheckout" value="#{server['slave.c3p0.pool.testConnectionOnCheckout']}" />
+	</bean>
+
+	<!-- 动态数据源 -->
+	<bean id="dynamicDataSource" class="com.xes.live.framework.dao.dbroute.DbRouteDataSource">
+		<property name="targetDataSources">
+			<map key-type="java.lang.String">
+				<entry key="masterDataSource" value-ref="masterDataSource" />
+				<entry key="slaveDataSource" value-ref="slaveDataSource" />
+			</map>
+		</property>
+		<property name="defaultTargetDataSource" ref="masterDataSource"/>  
+	</bean>
+   
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dynamicDataSource" />
+		<!-- 具体指定xml文件，可不配 
+        <property name="configLocation" value="classpath:mybatis-config.xml"/> -->  
+        
+        <!-- 自动扫描mapping.xml文件，**表示迭代查找 ,,也可在mybatis-config.xml中单独指定xml文件 -->  
+		<property name="mapperLocations"  >
+			<list>
+				<value>classpath*:org/appserver/mapper/*.xml</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="org.appserver.dao"/>
+         <!--  
+                 因为会自动装配 SqlSessionFactory和SqlSessionTemplate
+                 所以没有必要去指定SqlSessionFactory或SqlSessionTemplate
+                 因此可省略不配置；
+                 但是,如果你使用了一个以上的 DataSource，那么自动装配可能会失效。 
+                 这种 情况下，你可以使用sqlSessionFactoryBeanName
+                 或sqlSessionTemplateBeanName属性来设置正确的 bean名称来使用；  
+        -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+	
+</beans>
