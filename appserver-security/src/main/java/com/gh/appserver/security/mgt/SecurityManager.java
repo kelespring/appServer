@@ -57,8 +57,10 @@ public class SecurityManager {
             String urlMappingItem[] = line.split("=");
             String filterString = urlMappingItem[1];
             String filterItem[] = filterString.split(",");
+            AccessControlFilter filter;
             for(String filterName:filterItem){
-            	
+            	 filter = filters.get(urlMappingItem[1]);
+            	 filter.doFilter(request, response, chain);
             }
             filters.put(urlMappingItem[0], filters.get(urlMappingItem[1]));
         }
@@ -75,6 +77,7 @@ public class SecurityManager {
         }
         return out;
     }
+	
 	
 	
     public static final String COMMENT_POUND = "#";

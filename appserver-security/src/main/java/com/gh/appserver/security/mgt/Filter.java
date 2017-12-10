@@ -4,5 +4,5 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public interface Filter {
-	void doFilter(HttpServletRequest request, HttpServletResponse response,AccessControlFilter chain) throws Exception;
+	void doFilter(HttpServletRequest request, HttpServletResponse response,Filter chain) throws Exception;
 }
