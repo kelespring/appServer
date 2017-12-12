@@ -4,8 +4,7 @@
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
 	xmlns:repository="http://www.springframework.org/schema/data/repository"
 	xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
@@ -22,19 +21,37 @@
     	http://www.springframework.org/schema/aop/spring-aop.xsd
     	http://www.springframework.org/schema/mvc 
 		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
-		  
+
+	<import resource="classpath*:/spring-appserver-core.xml" />
 	<import resource="classpath*:/spring-framework-web.xml" />
+
+	<context:component-scan base-package="com.gh.appserver.security.*" />
+
+	<bean id="authc" class="com.gh.appserver.security.mgt.AuthenticationFilter" />
+	<bean id="anon" class="com.gh.appserver.security.mgt.AnonymousFilter" />
 	
-	<context:component-scan base-package="org.appserver.web.*"/>
-	
-   <!-- 拦截器 -->
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <!-- 对所有的请求拦截使用/** ,对某个模块下的请求拦截使用：/myPath/* -->
-            <mvc:mapping path="/**" />
-            <mvc:exclude-mapping path="/resources/**"/>
-            <ref bean="dataSourceInterceptor" />
-        </mvc:interceptor>
-    </mvc:interceptors>
-    <bean id="dataSourceInterceptor"  class="org.appserver.web.interceptor.DataSourceInterceptor"/>
-	</beans>
+
+	<bean id="securityFilter" class="com.gh.appserver.security.mgt.MySecurityManager">
+		<property name="loginUrl" value="/u/login.shtml" />
+		<!-- TODO 待提取 -->
+		<property name="successUrl" value="/" />
+		<property name="unauthorizedUrl" value="/?login" />
+
+		<property name="filters">
+			<util:map>
+				<entry key="authc" value-ref="authc"></entry>
+				<entry key="anon" value-ref="anon"></entry>
+			</util:map>
+		</property>
+
+		<!-- 读取初始自定义权限内容 -->
+		<property name="filterChainDefinitions">
+			<value>
+				/** = anon
+				/page/login.jsp = anon
+				/page/index.jsp = authc
+			</value>
+		</property>
+	</bean>
+
+</beans>
