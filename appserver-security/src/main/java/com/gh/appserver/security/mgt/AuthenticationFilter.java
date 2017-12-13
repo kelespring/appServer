@@ -40,11 +40,7 @@ public class AuthenticationFilter extends AbstractAccessControlFilter {
 			response.setContentType("application/json;charset=utf-8");
 			response.getWriter().write(resJson);
 		}else{
-	        String  url=request.getServletPath().toString();
-			String contextPath=request.getContextPath();
-			//被拦截，重定向到login界面
-            response.sendRedirect(contextPath+"/login.htm?ReturnUrl="
-                    + URLEncoder.encode(url,"UTF-8"));
+			redirectToLogin(request, response);
 		}
 		return false;
 	}

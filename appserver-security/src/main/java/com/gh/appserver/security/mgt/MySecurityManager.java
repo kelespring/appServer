@@ -1,11 +1,15 @@
 package com.gh.appserver.security.mgt;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import javax.mail.Session;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -14,10 +18,17 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.appserver.web.common.CommonConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
+
+import com.gh.appserver.security.authz.annotation.Logical;
+import com.gh.appserver.security.authz.annotation.RequiresAuthentication;
+import com.gh.appserver.security.authz.annotation.RequiresPermissions;
+import com.gh.appserver.security.authz.annotation.RequiresUser;
 
 /**
  * 权限管理器 注入系统资源访问规则 注入过滤器 注入资源访问权限失败URL，登录URL 提供对外： hasPermissions(url) 内部
@@ -25,14 +36,14 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBody
  * @author kevin
  * 
  */
-public class MySecurityManager implements Filter{
-	
+public class MySecurityManager implements Filter, AuthorizationCheck{
+	private AuthenticatingRealm authenticatingRealm;
 
 	private Map<String, AccessControlFilter> filters;
 
 	private Map<String, AccessControlFilter> filterChainDefinitions = new LinkedHashMap<>();
 
-	private String loginUrl;
+	public static String loginUrl;
 	private String successUrl;
 	private String unauthorizedUrl;
 	
@@ -220,4 +231,82 @@ public class MySecurityManager implements Filter{
         }
         return null;
     }
+
+	@Override
+	public boolean checkRequiresUser(RequiresUser requiresUser, HttpServletRequest request,
+			HttpServletResponse response) {
+		HttpSession  session = request.getSession();
+		if(session!=null){
+			Object object = session.getAttribute(CommonConstant.SESSION_USEROBJ_KEY);
+			if(object instanceof UserSession){
+				UserSession userSession = (UserSession)object;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean checkRequiresAuthentication(RequiresAuthentication requiresAuthentication,
+			HttpServletRequest request, HttpServletResponse response) {
+		HttpSession  session = request.getSession();
+		if(session!=null){
+			Object object = session.getAttribute(CommonConstant.SESSION_USEROBJ_KEY);
+			if(object instanceof UserSession){
+				UserSession userSession = (UserSession)object;
+				if(userSession.isLogin()){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean checkRequiresPermissions(RequiresPermissions requiresPermissions, HttpServletRequest request,
+			HttpServletResponse response) {
+		HttpSession  session = request.getSession();
+		if(session!=null){
+			Object object = session.getAttribute(CommonConstant.SESSION_USEROBJ_KEY);
+			if(object instanceof UserSession){
+				UserSession userSession = (UserSession)object;
+				if(userSession.isLogin()){
+					//检查权限
+					String[] hasPermissions = requiresPermissions.value();
+					Set myPermissions = new HashSet();
+					Logical logical = requiresPermissions.logical();
+					if(logical==Logical.AND){
+						for(String perm:hasPermissions){
+							if(myPermissions.contains(perm)){
+								continue;
+							}else{
+								return true;
+							}
+						}
+					}else{
+						for(String perm:hasPermissions){
+							if(myPermissions.contains(perm)){
+								return true;
+							}
+						}
+					}
+					
+				}
+			}
+		}
+		return false;
+	}
+
+	public void setAuthenticatingRealm(AuthenticatingRealm authenticatingRealm) {
+		this.authenticatingRealm = authenticatingRealm;
+	}
+
+	public AuthenticatingRealm getAuthenticatingRealm() {
+		return authenticatingRealm;
+	}
+	
+	
+	
+	
+
 }

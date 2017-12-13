@@ -30,10 +30,19 @@
 	<bean id="authc" class="com.gh.appserver.security.mgt.AuthenticationFilter" />
 	<bean id="anon" class="com.gh.appserver.security.mgt.AnonymousFilter" />
 	
+	   <!-- 拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <!-- 对所有的请求拦截使用/** ,对某个模块下的请求拦截使用：/myPath/* -->
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/resources/**"/>
+            <ref bean="authInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
+    <bean id="authInterceptor"  class="com.gh.appserver.security.web.interceptor.AuthInterceptor"/>
 
 	<bean id="securityFilter" class="com.gh.appserver.security.mgt.MySecurityManager">
 		<property name="loginUrl" value="/u/login.shtml" />
-		<!-- TODO 待提取 -->
 		<property name="successUrl" value="/" />
 		<property name="unauthorizedUrl" value="/?login" />
 

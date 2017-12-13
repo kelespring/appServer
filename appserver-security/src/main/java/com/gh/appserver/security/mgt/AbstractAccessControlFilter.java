@@ -1,8 +1,13 @@
 package com.gh.appserver.security.mgt;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Null;
+
+import org.apache.commons.lang3.StringUtils;
 
 public abstract class AbstractAccessControlFilter implements AccessControlFilter {
 	protected Object mappedValue;
@@ -49,5 +54,23 @@ public abstract class AbstractAccessControlFilter implements AccessControlFilter
 		//返回true表示放行，false表示验证失败了并且已经处理错误
 		return isAccess;
 	}
+	
+	 protected void redirectToLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		 	String loginUrl = MySecurityManager.loginUrl;
+		 	String ethod = request.getMethod();
+	        String queryString = request.getQueryString();
+	        String requestURI = request.getRequestURI();
+	        
+	        String  url=request.getServletPath().toString();
+	        if(StringUtils.isNotEmpty(queryString)){
+	        	url+="&"+queryString;
+	        }
+			String contextPath=request.getContextPath();
+			//被拦截，重定向到login界面
+            response.sendRedirect(response.encodeRedirectURL(contextPath+loginUrl+"?ReturnUrl="
+                    + URLEncoder.encode(url,"UTF-8"))); 
+
+	       // redirectToLogin(request, response);
+	    }
     
 }

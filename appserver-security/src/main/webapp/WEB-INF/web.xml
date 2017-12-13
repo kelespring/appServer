@@ -30,11 +30,22 @@
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
         <async-supported>true</async-supported>
     </filter>
+    <filter>
+    	<description>
+    	</description>
+    	<display-name>AuthorizationCheck</display-name>
+    	<filter-name>AuthorizationCheck</filter-name>
+    	<filter-class>com.gh.appserver.security.mgt.AuthorizationCheck</filter-class>
+    </filter>
 
     <filter-mapping>
         <filter-name>securityFilter</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
+    </filter-mapping>
+    <filter-mapping>
+    	<filter-name>AuthorizationCheck</filter-name>
+    	<url-pattern>/AuthorizationCheck</url-pattern>
     </filter-mapping>
 	
 	
